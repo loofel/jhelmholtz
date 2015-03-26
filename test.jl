@@ -38,6 +38,20 @@ function simpleInt(rows,cols,dx,dy,fun)
 	return (xflow,yflow);
 end
 
+function rotField(x,y,posx=0,posy=0)
+	x -= posx;
+	y -= posy;
+
+	d = sqrt(x*x + y*y);
+
+	if d > 0
+		return (-y/d,x/d);
+	else
+		return (0,0);
+	end
+
+end
+
 function test2()
 	rows = 32;
 	cols = 32;
@@ -45,11 +59,11 @@ function test2()
 	dx = 1.0 / rows;
 	dy = 1.0 / cols;
 
-	fun = ( (x,y) -> (-y,x) );
+	fun = (x,y) -> rotField(x,y,0.5,0.5);
 
 	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
 
-	plot1PForm(rows,cols,xflow,yflow,dx,dy);
+	plot1PFormRot(rows,cols,xflow,yflow,dx,dy);
 end
 
 function test3()
@@ -79,7 +93,84 @@ function test4()
 
 	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
 
-	divVec = computeDivergence(rows,cols,xflow,yflow,dx,dy);
+	(divVecFlowX,divVecFlowY) = computeDivergence(rows,cols,xflow,yflow);
 
-	plot1PFormDiv(rows,cols,xflow,yflow,dx,dy);
+	diffX = xflow - divVecFlowX;
+	diffY = yflow - divVecFlowY;
+
+	plot1PFormDiv(rows,cols,diffX,diffY,dx,dy);
+end
+
+
+function test5()
+	rows = 32;
+	cols = 32;
+
+	dx = 1.0 / rows;
+	dy = 1.0 / cols;
+
+	fun = (x,y) -> rotField(x,y,0.5,0.5);
+
+	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
+
+	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow);
+
+	plot1PFormDiv(rows,cols,rotVecFlowX,rotVecFlowY,dx,dy);
+end
+
+function checkDivAndRot(xflow,yflow,d0,d1)
+	p1Form = form1PGridToArray(xflow,yflow);
+
+	# compute divergence
+	div = d1 * p1Form;
+
+	# compute rotation
+	rot = (d0') * p1Form;
+
+	return (norm(div,2),norm(rot,2));
+end
+
+function test6()
+	rows = 32;
+	cols = 32;
+
+	dx = 1.0 / rows;
+	dy = 1.0 / cols;
+
+	d0 = getD0(rows,cols);
+	d1 = getD1(rows,cols);
+
+	# generate random vector field
+	(xflow,yflow) = simpleInt(rows,cols,dx,dy,(x,y)->(rand(),rand()));
+
+	# apply helmholz decomposition
+	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow);
+
+	# check result
+	(div,rot) = checkDivAndRot(divVecFlowX,divVecFlowY,d0,d1);
+	println("Divergence : Div=",div," Rot=",rot);
+
+	(div,rot) = checkDivAndRot(rotVecFlowX,rotVecFlowY,d0,d1);
+	println("Rotation : Div=",div," Rot=",rot);
+
+	(div,rot) = checkDivAndRot(hFlowX,hFlowY,d0,d1);
+	println("Harmonic : Div=",div," Rot=",rot);
+
+	plot1PForm(rows,cols,hFlowX,hFlowY,dx,dy);
+end
+
+
+function test7()
+	rows = 32;
+	cols = 32;
+
+	dx = 1.0 / rows;
+	dy = 1.0 / cols;
+
+	#fun = (x,y) -> rotField(x,y,0.5,0.5);
+	fun = (x,y) -> (1,0);
+
+	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
+
+	plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow);
 end
