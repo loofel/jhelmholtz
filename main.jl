@@ -8,6 +8,8 @@ function main(file)
   ############################
   pos_x = linspace(0,32,16)
   pos_y = linspace(0,32,16)
+  nx = length(pos_x)
+  ny = length(pos_y)
   x = reshape(repmat(pos_x, ny), nx, ny)
   y = reshape(repmat(pos_y, nx)', nx, ny)
   u = rand(nx, ny)
