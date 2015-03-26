@@ -6,12 +6,16 @@ function main(file)
   ############################
   # Test Data
   ############################
-  pos_x = linspace(0,32,16)
-  pos_y = linspace(0,32,16)
-  nx = length(pos_x)
-  ny = length(pos_y)
-  x = reshape(repmat(pos_x, ny), nx, ny)
-  y = reshape(repmat(pos_y, nx)', nx, ny)
+  nx = 32
+  ny = 16
+  pos_x = linspace(0,100,nx)
+  pos_y = linspace(0,50,ny)
+  for r in 1:nx
+    for c in 1:ny
+      x[r,c] = pos_x[r];
+      y[r,c] = pos_y[c];
+    end
+  end
   u = rand(nx, ny)
   v = rand(nx, ny) 
 
@@ -34,9 +38,14 @@ function main(file)
   #   u[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_0]
   #   v[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_1]
   # end
-  figure(1)
+
+  # plot grid
+  figure()
+  plot(reshape(x,nx*ny,1), reshape(y,nx*ny,1), marker="x", linestyle="none")
+  
+  figure()
   quiver(x,y,u,v)
   
-  figure(2)
+  figure()
   plot_surface(x,y,u, rstride=2, cstride=2, cmap=ColorMap("hsv"), alpha=0.8, linewidth=0.25)
 end
