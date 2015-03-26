@@ -9,7 +9,7 @@ function computeDivergence(rows,cols,xflow,yflow)
 	rhs = d1 * p1Form;
 
 	d0Form = \(L,rhs);
-	println("Accuracy: ",norm(L*d0Form-rhs,2) / norm(rhs,2));
+	println("Accuracy: ",norm(L*d0Form-rhs,2));
 
 	return form1PArrayToGrid(rows,cols,d1' * d0Form);
 end
@@ -23,7 +23,7 @@ function computeRot(rows,cols,xflow,yflow)
 	rhs = (d0') * p1Form;
 
 	p0Form = \(L,rhs);
-	println("Accuracy: ",norm(L*p0Form-rhs,2) / norm(rhs,2));
+	println("Accuracy: ",norm(L*p0Form-rhs,2));
 
 	return form1PArrayToGrid(rows,cols,d0 * p0Form);
 end
@@ -47,20 +47,18 @@ function plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow)
 	(x,y,xHvel,yHvel) = form1PToVectorField(rows,cols,hFlowX,hFlowY,dx,dy);
 
 	figure();
-	title("Vectorfield");
+	title(@sprintf("DEC Original : Magnitude=%0.3e", norm(xvel,2) + norm(yvel,2)));
 	quiver(x,y,xvel,yvel);
 
 	figure();
-	title("Divergence");
+	title(@sprintf("DEC Divergence : Magnitude=%0.3e", norm(xDivvel,2) + norm(yDivvel,2)));
 	quiver(x,y,xDivvel,yDivvel);
 
 	figure();
-	title("Rotation");
+	title(@sprintf("DEC Rotation : Magnitude=%0.3e", norm(xRotvel,2) + norm(yRotvel,2)));
 	quiver(x,y,xRotvel,yRotvel);
 
 	figure();
-	title("Harmonic");
+	title(@sprintf("DEC Harmonic : Magnitude=%0.3e", norm(xHvel,2) + norm(yHvel,2)));
 	quiver(x,y,xHvel,yHvel);
-
-	println("Norm H-Field : ",norm(xHvel,2)+norm(yHvel,2));
 end
