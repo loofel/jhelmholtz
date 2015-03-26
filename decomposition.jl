@@ -62,3 +62,29 @@ function plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow)
 	title(@sprintf("DEC Harmonic : Magnitude=%0.3e", norm(xHvel,2) + norm(yHvel,2)));
 	quiver(x,y,xHvel,yHvel);
 end
+
+function writeDecomposition(fname,rows,cols,dx,dy,xflow,yflow)
+	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow);
+
+	(x,y,xvel,yvel) = form1PToVectorField(rows,cols,xflow,yflow,dx,dy);
+	(x,y,xDivvel,yDivvel) = form1PToVectorField(rows,cols,divVecFlowX,divVecFlowY,dx,dy);
+	(x,y,xRotvel,yRotvel) = form1PToVectorField(rows,cols,rotVecFlowX,rotVecFlowY,dx,dy);
+	(x,y,xHvel,yHvel) = form1PToVectorField(rows,cols,hFlowX,hFlowY,dx,dy);
+
+	f = open(fname,"w");
+
+	write(f,@sprintf("x coord, y coord, z coord, U, V, divU, divV, rotU, rotV, hamU, hamV\n"));
+
+	for r in 1:rows
+		for c in 1:cols
+			write(f,@sprintf("%e,%e,0.5,%e,%e,%e,%e,%e,%e,%e,%e\n",
+				  x[r,c],y[r,c],
+				  xvel[r,c],yvel[r,c],
+				  xDivvel[r,c],yDivvel[r,c],
+				  xRotvel[r,c],yRotvel[r,c],
+				  xHvel[r,c],yHvel[r,c]));
+		end
+	end
+
+	close(f);
+end

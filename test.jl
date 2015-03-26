@@ -174,3 +174,17 @@ function test7()
 
 	plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow);
 end
+
+function test8()
+	rows = 8;
+	cols = 8;
+
+	dx = 1.0 / rows;
+	dy = 1.0 / cols;
+
+	fun = (x,y) -> (rand()*2.0-1.0,rand()*2.0-1.0);
+
+	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
+
+	writeDecomposition("test8.csv",rows,cols,dx,dy,xflow,yflow);
+end

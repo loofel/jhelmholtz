@@ -103,4 +103,6 @@ function main(file="")
   plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow);
   #figure()
   #plot_surface(x,y,u, rstride=2, cstride=2, cmap=ColorMap("hsv"), alpha=0.8, linewidth=0.25)
+
+  writeDecomposition("decomposition.csv",rows,cols,dx,dy,xflow,yflow)
 end
