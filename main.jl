@@ -11,6 +11,10 @@ function FelixVectorFieldTo1PForm(nx,ny,x,y,u,v)
     rows = ny - 1;
 
     dx = (maximum(x) - minimum(x)) / cols;
+    @printf("min x: %f\n", minimum(x));
+    @printf("max x: %f\n", maximum(x));
+    @printf("min y: %f\n", minimum(y));
+    @printf("max y: %f\n", maximum(y));
     dy = (maximum(y) - minimum(y)) / rows;
 
     # x-flow
@@ -40,7 +44,7 @@ function FelixVectorFieldTo1PForm(nx,ny,x,y,u,v)
     return (rows,cols,dx,dy,xflow,yflow);
 end
 
-function main(file="")
+function main(file="", openfoam=false)
   if isempty(file)
     ############################
     # Test Data
@@ -83,8 +87,13 @@ function main(file="")
     for i = 1: length(csv_data_fluid2d[:Points_0])
       idx_x = findfirst(pos_x, csv_data_fluid2d[i,:Points_0])
       idx_y = findfirst(pos_y, csv_data_fluid2d[i,:Points_1])
-      u[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_0]
-      v[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_1]
+      if openfoam 
+        u[idx_x, idx_y] = csv_data_fluid2d[i, :U_0]
+        v[idx_x, idx_y] = csv_data_fluid2d[i, :U_1]
+      else
+        u[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_0]
+        v[idx_x, idx_y] = csv_data_fluid2d[i, :Velocity_1]
+      end
     end
   end
 

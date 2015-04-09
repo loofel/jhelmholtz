@@ -93,7 +93,7 @@ function test4()
 
 	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
 
-	(divVecFlowX,divVecFlowY) = computeDivergence(rows,cols,xflow,yflow);
+	(divVecFlowX,divVecFlowY) = computeDivergence(rows,cols,xflow,yflow,dx,dy);
 
 	diffX = xflow - divVecFlowX;
 	diffY = yflow - divVecFlowY;
@@ -113,7 +113,7 @@ function test5()
 
 	(xflow,yflow) = simpleInt(rows,cols,dx,dy,fun);
 
-	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow);
+	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow,dx,dy);
 
 	plot1PFormDiv(rows,cols,rotVecFlowX,rotVecFlowY,dx,dy);
 end
@@ -144,7 +144,7 @@ function test6()
 	(xflow,yflow) = simpleInt(rows,cols,dx,dy,(x,y)->(rand(),rand()));
 
 	# apply helmholz decomposition
-	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow);
+	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow,dx,dy);
 
 	# check result
 	(div,rot) = checkDivAndRot(divVecFlowX,divVecFlowY,d0,d1);

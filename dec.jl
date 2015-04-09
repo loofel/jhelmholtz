@@ -65,8 +65,6 @@ function plot2PForm(rows,cols,scalar,dx,dy)
 end
 
 function getD0(rows,cols)
-res = zeros(Float64,(rows,cols));
-
 	I = Int64[];
 	J = Int64[];
 	V = Float64[];
@@ -113,8 +111,6 @@ res = zeros(Float64,(rows,cols));
 end
 
 function getD1(rows,cols)
-	res = zeros(Float64,(rows,cols));
-
 	I = Int64[];
 	J = Int64[];
 	V = Float64[];
@@ -148,6 +144,23 @@ function getD1(rows,cols)
 	return sparse(I,J,V,rows*cols,(rows+1)*cols + rows*(cols+1));
 end
 
+function getS1(rows,cols,dx,dy)
+	xoffset = (cols+1) * rows;
+	yoffset = cols * (rows+1);
+
+	s = dx / dy;
+
+	return spdiagm([ones(Float64,xoffset) * s; ones(Float64,yoffset)*2] * (1.0 / s) );
+end
+
+function getS1Inv(rows,cols,dx,dy)
+	xoffset = (cols+1) * rows;
+	yoffset = cols * (rows+1);
+
+	s = dx / dy;
+
+	return spdiagm([ones(Float64,xoffset) * (1.0 / s); ones(Float64,yoffset)*2] * s );
+end
 
 function plot1PFormDiv(rows,cols,xflow,yflow,dx,dy)
 	p1Form = form1PGridToArray(xflow,yflow);

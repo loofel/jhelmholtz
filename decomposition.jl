@@ -1,11 +1,13 @@
 include("dec.jl")
 
-function computeDivergence(rows,cols,xflow,yflow)
+function computeDivergence(rows,cols,xflow,yflow,dx,dy)
 	p1Form = form1PGridToArray(xflow,yflow);
 
 	# create laplace operator
 	d1 = getD1(rows,cols);
-	L = d1 * d1';
+	s1inv = getS1Inv(rows,cols,dx,dy);
+
+	L = d1 * s1inv * d1';
 	rhs = d1 * p1Form;
 
 	d0Form = \(L,rhs);
@@ -14,12 +16,14 @@ function computeDivergence(rows,cols,xflow,yflow)
 	return form1PArrayToGrid(rows,cols,d1' * d0Form);
 end
 
-function computeRot(rows,cols,xflow,yflow)
+function computeRot(rows,cols,xflow,yflow,dx,dy)
 	p1Form = form1PGridToArray(xflow,yflow);
 
 	# create laplace operator
 	d0 = getD0(rows,cols);
-	L = d0' * d0;
+	s1 = getS1(rows,cols,dx,dy);
+
+	L = d0' * s1 * d0;
 	rhs = (d0') * p1Form;
 
 	p0Form = \(L,rhs);
@@ -28,9 +32,9 @@ function computeRot(rows,cols,xflow,yflow)
 	return form1PArrayToGrid(rows,cols,d0 * p0Form);
 end
 
-function helmholzDecomposition(rows,cols,xflow,yflow)
-	(divVecFlowX,divVecFlowY) = computeDivergence(rows,cols,xflow,yflow);
-	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow);
+function helmholzDecomposition(rows,cols,xflow,yflow,dx,dy)
+	(divVecFlowX,divVecFlowY) = computeDivergence(rows,cols,xflow,yflow,dx,dy);
+	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow,dx,dy);
 
 	hFlowX = xflow - divVecFlowX - rotVecFlowX;
 	hFlowY = yflow - divVecFlowY - rotVecFlowY;
@@ -39,7 +43,7 @@ function helmholzDecomposition(rows,cols,xflow,yflow)
 end
 
 function plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow)
-	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow);
+	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow,dx,dy);
 
 	(x,y,xvel,yvel) = form1PToVectorField(rows,cols,xflow,yflow,dx,dy);
 	(x,y,xDivvel,yDivvel) = form1PToVectorField(rows,cols,divVecFlowX,divVecFlowY,dx,dy);
@@ -64,7 +68,7 @@ function plotHelmholzDecomposition(rows,cols,dx,dy,xflow,yflow)
 end
 
 function writeDecomposition(fname,rows,cols,dx,dy,xflow,yflow)
-	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow);
+	(divVecFlowX,divVecFlowY,rotVecFlowX,rotVecFlowY,hFlowX,hFlowY) = helmholzDecomposition(rows,cols,xflow,yflow,dx,dy);
 
 	(x,y,xvel,yvel) = form1PToVectorField(rows,cols,xflow,yflow,dx,dy);
 	(x,y,xDivvel,yDivvel) = form1PToVectorField(rows,cols,divVecFlowX,divVecFlowY,dx,dy);
