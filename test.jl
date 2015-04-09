@@ -115,7 +115,7 @@ function test5()
 
 	(rotVecFlowX,rotVecFlowY) = computeRot(rows,cols,xflow,yflow,dx,dy);
 
-	plot1PFormDiv(rows,cols,rotVecFlowX,rotVecFlowY,dx,dy);
+	plot1PFormRot(rows,cols,rotVecFlowX,rotVecFlowY,dx,dy);
 end
 
 function checkDivAndRot(xflow,yflow,d0,d1)
