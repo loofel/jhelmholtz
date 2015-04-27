@@ -49,6 +49,7 @@ end
 
 function plot0PForm(rows,cols,scalar,dx,dy)
 	(x,y) = meshGrid(rows+1,cols+1,dx,dy);
+
 	pcolormesh(x,y,scalar);
 	colorbar();
 end
@@ -60,6 +61,7 @@ end
 
 function plot2PForm(rows,cols,scalar,dx,dy)
 	(x,y) = meshGrid(rows,cols,dx,dy);
+
 	pcolormesh(x,y,scalar / (dx * dy));
 	colorbar();
 end
@@ -174,8 +176,17 @@ end
 function plot1PFormRot(rows,cols,xflow,yflow,dx,dy)
 	p1Form = form1PGridToArray(xflow,yflow);
 	d0 = getD0(rows,cols);
-	p0Form = (d0') * p1Form;
-	scalarField = reshape(p0Form,(rows+1,cols+1))';
+	s1inv = getS1Inv(rows,cols,dx,dy);
+	p0Form = (d0') * s1inv * p1Form;
+
+	tmp = zeros(Float64,(rows+1) * (cols+1));
+	for r in 1:(rows+1)
+		for c in 1:(cols+1)
+			tmp[(r-1) * (cols+1) + c] = r;
+		end
+	end
+
+	scalarField = reshape(p0Form,(cols+1,rows+1))';
 
 	plot0PForm(rows,cols,scalarField,dx,dy)
 end

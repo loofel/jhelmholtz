@@ -53,11 +53,11 @@ function rotField(x,y,posx=0,posy=0)
 end
 
 function test2()
-	rows = 32;
+	rows = 16;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols * 2;
+	dy = 1.0 / rows;
 
 	fun = (x,y) -> rotField(x,y,0.5,0.5);
 
@@ -70,8 +70,8 @@ function test3()
 	rows = 32;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	fun = ( (x,y) -> (x * (1.0 + x),0) );
 
@@ -86,8 +86,8 @@ function test4()
 	rows = 32;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	fun = ( (x,y) -> (x * (1.0 + x),0) );
 
@@ -106,8 +106,8 @@ function test5()
 	rows = 32;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	fun = (x,y) -> rotField(x,y,0.5,0.5);
 
@@ -134,8 +134,8 @@ function test6()
 	rows = 32;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	d0 = getD0(rows,cols);
 	d1 = getD1(rows,cols);
@@ -164,8 +164,8 @@ function test7()
 	rows = 32;
 	cols = 32;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	#fun = (x,y) -> rotField(x,y,0.5,0.5);
 	fun = (x,y) -> (1,0);
@@ -179,8 +179,8 @@ function test8()
 	rows = 8;
 	cols = 8;
 
-	dx = 1.0 / rows;
-	dy = 1.0 / cols;
+	dx = 1.0 / cols;
+	dy = 1.0 / rows;
 
 	fun = (x,y) -> (rand()*2.0-1.0,rand()*2.0-1.0);
 
